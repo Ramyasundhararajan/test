@@ -102,16 +102,16 @@ def predict_sentiments_from_file(file_path, model, tokenizer):
 @app.route('/')
 def home():
     return render_template('index.html')
-
-@app.route('/predict_file', methods=['GET','POST'])
-def predict_file():
+@app.route('/predict_text', methods=['GET', 'POST'])
+def predict_text():
     if request.method == 'POST':
-        file_path = request.form.get('file_path', '')  # should match the name attribute in the HTML form
-        if not file_path:
-            return "File path is empty."
-
-        all_sentiments = predict_sentiments_from_file(file_path, model, tokenizer)
-        return render_template('result.html', review_path=file_path, all_sentiments=all_sentiments)
+        input_text = request.form.get('input_text', '')  # Get input from the form
+        if not input_text:
+            return "Input text is empty."
+        sentiment = predict_sentiment(input_text, model, tokenizer)
+        return render_template('text_result.html', input_text=input_text, sentiment=sentiment)
+    else:  # Handle GET requests (optional, but can display the form)
+        return render_template('index.html')  # Assuming this displays the form
 
 
 if __name__ == '__main__':
